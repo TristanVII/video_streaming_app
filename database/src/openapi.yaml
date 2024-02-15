@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: SQL Database Service 
+  description: Microservice for mysql 
+  contact:
+    email: tdavis53@my.bcit.ca
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /upload:
+    post:
+      summary: Post video contents 
+      operationId: app.post_video
+      description: Posts Video 
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                video:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successfully returned a stats
+        '400':
+          description: Invalid request
+

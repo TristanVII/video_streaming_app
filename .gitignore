@@ -1,0 +1,20 @@
+# Node.js / Angular
+node_modules/
+npm-debug.log
+yarn-error.log
+/dist
+/tmp
+
+# Python
+*.pyc
+__pycache__/
+.env
+venv/
+
+# Golang
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+.aws

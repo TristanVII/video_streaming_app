@@ -1,0 +1,33 @@
+<div class="upload-container">
+  <h1>Video Streaming App</h1>
+  
+  <h3>Upload a video file</h3>
+<div *ngIf="!file" class="file-upload-container">
+  <label for="fileInput" class="custom-file-upload">
+    Select File
+  </label>
+  <input  id="fileInput" type="file" (change)="onChange($event)" #fileUpload />
+</div>
+  
+  <div *ngIf="file" class="file-details">
+    <section class="file-info">
+      <h2>File details:</h2>
+      <ul>
+        <input type="text" placeholder="Video Name" [(ngModel)]="fileName">
+        <li><strong>Type:</strong> {{file.type}}</li>
+        <li><strong>Size:</strong> {{file.size}} bytes</li>
+      </ul>
+    </section>
+  
+    <div id="buttons" class="netflix-buttons">
+      <button (click)="onUpload()">Upload</button>
+      <button (click)="resetFileInput()">Reset</button>
+    </div>
+  
+    <section [ngSwitch]="status" class="upload-status">
+      <p *ngSwitchCase="'uploading'">Uploading...</p>
+      <p *ngSwitchCase="'success'">Succesfully uploaded {{file.name}}</p>
+      <p *ngSwitchCase="'fail'">Failed to Upload. Try again or change files.</p>
+    </section>
+  </div>
+</div>
