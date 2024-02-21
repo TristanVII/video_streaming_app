@@ -1,0 +1,10 @@
+<div class="overlay">
+  <div class="modal">
+    <!-- Video player -->
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">X</button>
+    <video controls autoplay>
+      <source [src]="videoUrl" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>

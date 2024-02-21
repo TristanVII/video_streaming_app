@@ -1,23 +1,24 @@
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from pydantic import BaseModel
 
 
 class Base(DeclarativeBase):
     pass
 
 
-class JobListing(Base):
-    __tablename__ = "job_listing"
+class Videos(Base):
+    __tablename__ = "videos"
+    id: Mapped[Integer] = mapped_column(Integer, primary_key=True)
+    name: Mapped[String] = mapped_column(String(50), nullable=False)
+    s3_key: Mapped[String] = mapped_column(String(50), nullable=False)
+    user: Mapped[String] = mapped_column(String(50), nullable=False)
 
-    def to_dict(self):
 
-        data = self.__dict__
-        keys = [
-            "job_listing_id",
-            "sector",
-            "title",
-            "salary",
-            "location",
-            "date",
-            "trace_id"]
-
-        return {k: v for k, v in data.items() if k in keys}
+class Video(BaseModel):
+    name: str
+    s3_key: str
+    user: str

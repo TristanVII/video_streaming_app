@@ -9,14 +9,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'upload-front-end';
+  title = 'Video Streaming';
   token = "";
-  authenticated!: Observable<boolean>
   loading = true;
+  authenticated!: Observable<boolean>
   constructor(private authService: AuthService, private route: ActivatedRoute){}
 
   async ngOnInit(): Promise<void> {
-    console.log("token", this.authService.token)
     const params = this.route.snapshot.queryParamMap;
     
     // Access specific query parameters by name

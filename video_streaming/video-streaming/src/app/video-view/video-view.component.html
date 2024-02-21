@@ -1,0 +1,13 @@
+<div *ngIf='!loading' class="video-container">
+  <div *ngFor="let video of videos" class="video-card">
+    <div class="video-info">
+      <h3>{{ video.name }}</h3>
+      <p>Created by: {{video.user}}</p>
+    </div>
+    <!-- Show preview Here -->
+    <div class="video-preview">
+      <video src="{{video.url}}"></video>
+      <button class="watch-button" (click)="watchVideo(video.url)">Watch</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+.video-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.video-card {
+  width: 300px;
+  margin: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-info {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.video-preview {
+  position: relative;
+}
+
+.video-preview video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.watch-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 8px 15px;
+  background-color: #ff0055;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.watch-button:hover {
+  background-color: #cc0044;
+}

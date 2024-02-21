@@ -1,0 +1,104 @@
+// login.component.scss
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif; // Change font if needed
+}
+
+.login-box {
+  width: 300px;
+  padding: 40px;
+  border: 2px solid #333; // Dark border
+  background-color: #2b2b2b; // Darker background color
+  color: #fff;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #fff;
+  }
+
+  form {
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+
+      input {
+        width: 95%; 
+        padding: 10px;
+        border: none;
+        background-color: #444; // Darker input background
+        color: #fff;
+        font-size: 16px;
+      }
+
+      .bx {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 10px;
+        color: #777; // Icon color
+        font-size: 18px;
+      }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #2b2b2b; // Primary color for button
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #2b2b2b; // Darker color on hover
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 10px; // Add margin between buttons
+      }
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: 10px;
+      color: #aaa; // Lighter color for text
+      font-size: 14px;
+
+      &:hover {
+        color: #777; // Darker color on hover
+        cursor: pointer;
+      }
+    }
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 20px;
+
+    button {
+      background-color: #007bff; // Primary color for button
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3; // Darker color on hover
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 10px; // Add margin between buttons
+      }
+    }
+  }
+}

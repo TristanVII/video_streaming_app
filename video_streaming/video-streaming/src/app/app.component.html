@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Upload Form</title>
+    <title>Video Viewer</title>
 </head>
 <body>
   <app-nav-bar></app-nav-bar>
   <div *ngIf="!loading">
     <app-auth-component *ngIf="!(authenticated | async)"></app-auth-component>
-    <app-single-file-upload *ngIf="authenticated | async"></app-single-file-upload>
+    <app-video-view *ngIf="authenticated | async"></app-video-view>
   </div>
 </body>
 </html>
+

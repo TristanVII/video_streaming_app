@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ReplaySubject, takeUntil, tap } from 'rxjs';
+import { ReplaySubject, mergeMap, takeUntil, tap } from 'rxjs';
+import { AuthService } from '../auth.service';
 
 const UPLOAD_URL = 'http://127.0.0.1:8070/upload';
-const DATABASE_URL = 'http://127.0.0.1:8000/save'
+const DATABASE_URL = `http://localhost:8000/upload`;
 
 @Component({
   selector: 'app-single-file-upload',
@@ -17,16 +18,21 @@ export class SingleFileUploadComponent implements OnDestroy {
   fileName: string = '';
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {}
 
   // On file Select
   onChange(event: any) {
     const file: File = event.target.files[0];
-
+    const acceptedVideoTypes = [
+        "video/mp4",
+        "video/quicktime",
+        "video/webm",
+        "video/x-msvideo",
+      ];
     if (file) {
-      if (file.type !== 'video/mp4') {
+      if (!acceptedVideoTypes.includes(file.type)) {
         alert('Can only upload mp4');
         this.file = null;
         this.status = 'initial';
@@ -42,46 +48,53 @@ export class SingleFileUploadComponent implements OnDestroy {
       return;
     }
     if (!this.fileName) {
-      alert('Please set a name to the file')
+      alert('Please set a name to the file');
       return;
     }
-    const fileName = this.fileName
+    const fileName = this.fileName;
 
-    const blob = new Blob([this.file])
+    const blob = new Blob([this.file]);
 
-    const fileType = this.file.name.split('.')[1]
+    const fileType = this.file.name.split('.')[1];
 
-    const keyName = Date.now().toString() + '.' + fileType
+    const keyName = Date.now().toString() + '.' + fileType;
     const header = new HttpHeaders({
       'Content-Type': 'application/octet-stream',
-      'File-Name': keyName
-    })
+      'File-Name': keyName,
+    });
 
     // Uploading the file to File System Service
+    this.status = 'uploading'
 
     this.http
-      .post(UPLOAD_URL, blob, { headers : header, responseType: 'blob' })
+      .post(UPLOAD_URL, blob, { headers: header, responseType: 'blob' })
       .pipe(
+        mergeMap((_uploadResponse: any) => {
+          return this.http.post(
+            DATABASE_URL,
+            { name: `${fileName}`, s3_key: `${keyName}`, user: this.authService.user },
+            { headers: { 'Content-Type': 'application/json' } }
+          );
+        }),
         tap(() => (this.status = 'uploading')),
         takeUntil(this.destroyed)
       )
       .subscribe({
-        next: async (request) => {
-          console.log(request)
+        next: (databaseResponse: any) => {
+          console.log(databaseResponse); // Log the response of the second request
+          this.status = 'success';
+          this.file = null;
+          alert("Succesfully uploaded video")
         },
         error: (e) => {
+          console.error(e); // Log any errors
           this.status = 'fail';
         },
-        complete: () => {
-          this.status = 'success'
-        }
       });
-
-    // Use the filePath to set file to Database
 
   }
   resetFileInput() {
-    console.log(this.file)
+    console.log(this.file);
     if (this.file) {
       this.file = null;
     }

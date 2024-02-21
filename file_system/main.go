@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -21,6 +22,37 @@ const (
 	REGION = "us-west-2"
 	BUCKET = "s3gotest"
 )
+
+func urlHandler(w http.ResponseWriter, r *http.Request) {
+	// Set CORS headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	var requestBody struct {
+		S3Key string `json:"s3_key"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		http.Error(w, "Failed to decode request body", http.StatusBadRequest)
+		return
+	}
+
+	url, err := getPresignURL(requestBody.S3Key)
+
+	if err != nil {
+		http.Error(w, "Failed to get URL", http.StatusUnprocessableEntity)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(url))
+
+}
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers
@@ -91,9 +123,8 @@ func main() {
 
 	s3Client = s3.NewFromConfig(cfg)
 	presignClient = s3.NewPresignClient(s3Client)
-	//fmt.Println(getPresignURL("70cbeaae-7e1c-43d5-a5f4-4bff899c3c9f"))
 	http.HandleFunc("/upload", uploadHandler)
+	http.HandleFunc("/url", urlHandler)
 	http.ListenAndServe(":8070", nil)
 
-	// TEST
 }

@@ -26,7 +26,7 @@
   
     <section [ngSwitch]="status" class="upload-status">
       <p *ngSwitchCase="'uploading'">Uploading...</p>
-      <p *ngSwitchCase="'success'">Succesfully uploaded {{file.name}}</p>
+      <p *ngSwitchCase="'success'">Succesfully uploaded video</p>
       <p *ngSwitchCase="'fail'">Failed to Upload. Try again or change files.</p>
     </section>
   </div>
