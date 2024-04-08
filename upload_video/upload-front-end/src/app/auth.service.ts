@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 
-const URL = 'http://localhost:3000';
+const URL = 'http://34.173.240.58:3000';
 @Injectable({
   providedIn: 'root',
 })
