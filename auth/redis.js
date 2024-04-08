@@ -3,8 +3,7 @@ const { createClient } = require("redis");
 // Connect to localhost on port 6379
 const redisConnect = async () => {
   const client = createClient({
-    host: "10.17.37.183",
-    port: 6379,
+    url: "redis://10.17.37.183:6379",
   });
 
   client.on("error", (err) => console.log("Redis Client Error", err));
