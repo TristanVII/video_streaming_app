@@ -11,8 +11,8 @@ interface Video {
   url: string;
 }
 
-const DATABASE_URL = `http://localhost:8000/videos`;
-const S3_URL = 'http://127.0.0.1:8070/url';
+const DATABASE_URL = `http://35.188.122.233:8000/videos`;
+const S3_URL = 'http://34.173.158.20:8070/url';
 
 @Component({
   selector: 'app-video-view',

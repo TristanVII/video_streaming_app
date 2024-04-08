@@ -6,6 +6,9 @@ services:
       - '6379:6379'
     volumes:
       - redis-data:/data
+    networks:
+      - "api.network"
+
   mysqldb:
     image: mariadb:10.6.4-focal
     volumes:
@@ -18,6 +21,10 @@ services:
       - MYSQL_PASSWORD=password
     ports:
      - "3307:3306"
+    networks:
+      - "api.network"
+
+  
   auth:
     build: ./auth
     ports:
@@ -26,9 +33,11 @@ services:
       - redis
     environment:
       - REDIS_HOST=redis
+    networks:
+      - "api.network"
 
   database:
-    build: ./database
+    image: tristan007/3496-database:latest
     ports:
       - "8000:8000"
     environment:
@@ -39,18 +48,22 @@ services:
       - HOST=mysqldb
     depends_on:
       - mysqldb
+    networks:
+      - "api.network"
 
   filesystem:
-    build: ./file_system
+    build: tristan007/3496-file-system:latest
     ports:
       - "8070:8070"
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=us-west-2
+    networks:
+      - "api.network"
 
   upload_web_app:
-    build: ./upload_video
+    build: tristan007/3496-upload-video:latest
     ports:
       - "4200:80" 
     depends_on:
@@ -58,9 +71,11 @@ services:
       - database
     environment:
       - DATABASE=database
+    networks:
+      - "api.network"
 
   streaming_web_app:
-    build: ./video_streaming
+    build: tristan007/3496-video-streaming:latest
     ports:
       - "4201:80" 
     depends_on:
@@ -68,7 +83,14 @@ services:
       - database
     environment:
       - DATABASE=database
+    networks:
+      - "api.network"
+
 volumes:
   redis-data:
   videoDB:
+
+networks:
+  api.network:
+
 

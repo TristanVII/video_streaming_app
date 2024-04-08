@@ -1,0 +1,204 @@
+# mysql
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-statefulset
+spec:
+  serviceName: mysql-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mariadb:10.6.4-focal
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+# auth
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: tristan007/3496-auth:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret
+
+---
+# redis
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-persistent-storage
+              mountPath: /data
+      volumes:
+        - name: redis-persistent-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
+
+---
+# database
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: tristan007/3496-database:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret
+
+---
+# filesystem
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filesystem-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filesystem
+  template:
+    metadata:
+      labels:
+        app: filesystem
+    spec:
+      containers:
+        - name: filesystem
+          image: tristan007/3496-file-system:latest
+          ports:
+            - containerPort: 8070
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret
+          volumeMounts:
+            - name: filesystem-persistent-storage
+              mountPath: /app/uploads
+      volumes:
+        - name: filesystem-persistent-storage
+          persistentVolumeClaim:
+            claimName: file-data-pvc
+
+---
+# upload
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload
+  template:
+    metadata:
+      labels:
+        app: upload
+    spec:
+      containers:
+        - name: upload
+          image: tristan007/3496-upload-video:latest
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret
+
+---
+# stream
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stream-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stream
+  template:
+    metadata:
+      labels:
+        app: stream
+    spec:
+      containers:
+        - name: stream
+          image: tristan007/3496-video-streaming:latest
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: env-configmap
+            - secretRef:
+                name: password-secret

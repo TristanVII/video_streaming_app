@@ -1,0 +1,100 @@
+# mysql service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: "3306"
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+
+---
+# auth service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+---
+# redis service
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+
+---  
+# database service
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  selector:
+    app: database
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+# filesystem service
+apiVersion: v1
+kind: Service
+metadata:
+  name: filesystem-service
+spec:
+  selector:
+    app: filesystem
+  ports:
+    - protocol: TCP
+      port: 8070
+      targetPort: 8070
+  type: LoadBalancer
+
+---
+# upload service
+apiVersion: v1
+kind: Service
+metadata:
+  name: upload-service
+spec:
+  selector:
+    app: upload
+  ports:
+    - protocol: TCP
+      port: 4200
+      targetPort: 4200
+  type: LoadBalancer
+
+---
+# stream service
+apiVersion: v1
+kind: Service
+metadata:
+  name: stream-service
+spec:
+  selector:
+    app: stream
+  ports:
+    - protocol: TCP
+      port: 4201
+      targetPort: 4201
+  type: LoadBalancer

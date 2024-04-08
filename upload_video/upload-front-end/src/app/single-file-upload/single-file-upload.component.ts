@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReplaySubject, mergeMap, takeUntil, tap } from 'rxjs';
 import { AuthService } from '../auth.service';
 
-const UPLOAD_URL = 'http://127.0.0.1:8070/upload';
-const DATABASE_URL = `http://localhost:8000/upload`;
+const UPLOAD_URL = 'http://34.173.158.20:8070/upload';
+const DATABASE_URL = `http://35.188.122.233:8000/upload`;
 
 @Component({
   selector: 'app-single-file-upload',
@@ -66,13 +66,14 @@ export class SingleFileUploadComponent implements OnDestroy {
     // Uploading the file to File System Service
     this.status = 'uploading'
 
+    const username = this.authService.user ? this.authService :  'test';
     this.http
       .post(UPLOAD_URL, blob, { headers: header, responseType: 'blob' })
       .pipe(
         mergeMap((_uploadResponse: any) => {
           return this.http.post(
             DATABASE_URL,
-            { name: `${fileName}`, s3_key: `${keyName}`, user: this.authService.user },
+            { name: `${fileName}`, s3_key: `${keyName}`, user: username },
             { headers: { 'Content-Type': 'application/json' } }
           );
         }),
